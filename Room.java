@@ -1,6 +1,7 @@
 import java.util.Set;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @author  Kanver Bains
@@ -10,8 +11,8 @@ import java.util.Iterator;
 public class Room {
     private String description;
     private HashMap<String, Room> exits;        // stores exits of this room.
-    private String item;
-    private boolean itemInRoom = false;
+    private String iName, iDescription;
+
 
     /**
      * Create a room described "description". Initially, it has
@@ -32,14 +33,20 @@ public class Room {
     public void setExit(String direction, Room neighbor) {
         exits.put(direction, neighbor);
     }
-    public void setItem(String theItem) {
-        item = theItem;
+    public void setItem(String itemDescription, String itemName) {
+        iName = itemName;
+        iDescription = itemDescription;
     }
     
-    public String getItem()
+    public String getItemLong()
     {
-        return item;
+        return iDescription;
     }
+    
+    public String getItemShort(){
+        return iName;
+    }
+    
     /**
      * @return The short description of the room
      * (the one that was defined in the constructor).
@@ -63,9 +70,11 @@ public class Room {
      * "Exits: north west".
      * @return Details of the room's exits.
      */
+
     private String getExitString() {
         String returnString = "Exits:";
         Set<String> keys = exits.keySet();
+        
         for(String exit : keys) {
             returnString += " " + exit;
         }

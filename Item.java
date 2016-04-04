@@ -8,17 +8,19 @@ import java.util.Iterator;
 
 public class Item {
     private String itemDescription;
-    //private HashMap<String, Item> itemList;
-
+    private String itemName;
     /**
      * Constructor for objects of class Item
      */
     public Item(String itemDescription) {
         this.itemDescription = itemDescription;
-    //    itemList = new HashMap<String, Item>();
     }
     
     public String getLongItemDescription(){
         return itemDescription;
+    }
+    
+    public String getShortItemDescription(){
+        return itemName;
     }
 }

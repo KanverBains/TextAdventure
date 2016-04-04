@@ -1,3 +1,4 @@
+import java.util.*;
 /**
  * @author  Kanver Bains
  * @version 3.29.2016
@@ -7,6 +8,8 @@ public class Game {
     private Parser parser;
     private Room currentRoom;
     private Item currentItem;
+    List<String> inInventory = new ArrayList<String>();
+    private Room startRoom;
     /**
      * Create the game and initialise its internal map.
      */
@@ -45,20 +48,20 @@ public class Game {
         
         // initialise room exits
         secretRoom.setExit("north", kitchen);
-        secretRoom.setItem("Hint.. You need to find a cookie for the Guard");
+        secretRoom.setItem("Hint.. You need to find a cookie for the Guard", "");
 
         kitchen.setExit("northwest", start);
         kitchen.setExit("west", diningRoom);
         kitchen.setExit("south", secretRoom);
-        kitchen.setItem("There is a moldy peice of toast. Better leave that alone");
+        kitchen.setItem("There is a moldy peice of toast. Better leave that alone", "");
         
         diningRoom.setExit("north", start);
         diningRoom.setExit("east", kitchen);
-        diningRoom.setItem("Nothing really to see here");
+        diningRoom.setItem("Nothing really to see here", "");
 
         deck.setExit("northeast", start);
         deck.setExit("north", library);
-        deck.setItem("The deck is made of wood.");
+        deck.setItem("The deck is made of wood.", "");
         
         start.setExit("north", loft);
         start.setExit("northeast", livingRoom);
@@ -68,65 +71,70 @@ public class Game {
         start.setExit("southwest", deck);
         start.setExit("west", library);
         start.setExit("northwest" , bedroom);
-        start.setItem("This is the starting room. No items here");
+        start.setItem("This is the starting room. No items here", "");
         
         homeTheather.setExit("west" , start);
         homeTheather.setExit("east", bathroom);
-        homeTheather.setItem("You seea nice looing theather set up in this room");
+        homeTheather.setItem("You seea nice looing theather set up in this room", "");
         
         bathroom.setExit("west", homeTheather);
-        bathroom.setItem("You find a peice of poop on the floor. You decide to not touch it.");
+        bathroom.setItem("You find a peice of poop on the floor. You decide to not touch it.", "");
         
         bedroom.setExit("southeast", start);
-        bedroom.setItem("You find a comfy looking bed");
+        bedroom.setItem("You find a comfy looking bed", "");
         
         treasure.setExit("south", wineCellar);
-        treasure.setItem("You find a cookie and pick it up!");
+        treasure.setItem("You find a cookie and pick it up!", "cookie");
         
         livingRoom.setExit("southwest", start);
         livingRoom.setExit("north", gym);
         livingRoom.setExit("northeast", wineCellar);
-        livingRoom.setItem("You find a Sports Illustrated magazine. You decide to leave it alone");
+        livingRoom.setItem("You find a Sports Illustrated magazine. You decide to leave it alone", "");
         
         loft.setExit("south", start);
         loft.setExit("northwest", foyer);
-        loft.setItem("No item here");
+        loft.setItem("No item here", "");
         
         wineCellar.setExit("north", treasure);
         wineCellar.setExit("southwest", livingRoom);
-        wineCellar.setItem("You see an expensive looking wine collection.");
+        wineCellar.setItem("You see an expensive looking wine collection.", "wine");
         
         foyer.setExit("south", bedroom);
         foyer.setExit("north", masterBedroom);
         foyer.setExit("southeast", loft);
-        foyer.setItem("No itmes to be found here");
+        foyer.setItem("No itmes to be found here", "");
         
         lounge.setExit("north", guardRoom);
         lounge.setExit("east", gym);
-        lounge.setItem("You find a cigar on the floor. You decide to leave it alone.");
+        lounge.setItem("You find a cigar on the floor.", "");
         
         gym.setExit("south", livingRoom);
         gym.setExit("west", lounge);
-        gym.setItem("You see a well equipt home gym");
+        gym.setItem("You see a well equipt home gym", "");
         
         masterBedroom.setExit("south", foyer);
         masterBedroom.setExit("east", guardRoom);
-        masterBedroom.setItem("Nothing out of the ordinary here");
+        masterBedroom.setItem("Nothing out of the ordinary here", "");
         
         guardRoom.setExit("north", teleport);
-        guardRoom.setExit("east", finish);
+        if(inInventory.contains("cookie")){
+            guardRoom.setExit("east", finish);
+        }
         guardRoom.setExit("south", lounge);
         guardRoom.setExit("west", masterBedroom);
-        guardRoom.setItem("The guard demands you give him a cookie or he will not move");
+        guardRoom.setItem("The guard demands you give him a cookie or he will not move", "");
         
-        finish.setExit("west", guardRoom);
-        
-        teleport.setExit("south", guardRoom);
+        teleport.setExit("start", start);
         
         library.setExit("east", start);
         library.setExit("south", deck);
-        library.setItem("You see shelves to the ceiling filled with books.");
+        library.setItem("You see shelves to the ceiling filled with books.", "");
         
+        start.setExit("treasure", treasure);
+        treasure.setExit("guard", guardRoom);
+        start.setExit("guard", guardRoom);
+        guardRoom.setExit("start", start);
+       
         currentRoom = start;  // start game outside
     }
 
@@ -144,7 +152,7 @@ public class Game {
             Command command = parser.getCommand();
             finished = processCommand(command);
         }
-        System.out.println("Thank you for playing.  Good bye.");
+        System.out.println("Thank you for playing. Good bye.");
     }
 
     /**
@@ -189,6 +197,10 @@ public class Game {
             case LOOK:
                 lookCommand(command);
                 break;
+                
+            case INVENTORY:
+                printInventory();
+                break;
         }
         return wantToQuit;
     }
@@ -202,7 +214,7 @@ public class Game {
      */
     private void printHelp() {
         System.out.println("You are lost. You are alone. You wander");
-        System.out.println("around at the university.");
+        System.out.println("around at the haunted house.");
         System.out.println();
         System.out.println("Your command words are:");
         parser.showCommands();
@@ -230,6 +242,7 @@ public class Game {
             currentRoom = nextRoom;
             System.out.println(currentRoom.getLongDescription());
         }
+        
     }
 
     /** 
@@ -247,35 +260,27 @@ public class Game {
     }
     
     private void lookCommand(Command command) {
-        String treasure, secretRoom, bathroom, wineCellar, lounge, guardRoom, start;
-        treasure ="You picked up the Cookie";
-        secretRoom = "Hint.. You must first visit the guard room to find out what the guard wants";
-        bathroom = "You see a piece of poop on the floor. You probably should not touch it";
-        wineCellar = "There is a rather expensive collection of wine here";
-        lounge = "You see a cigar on the floor";
-        guardRoom = "The guard wants you to get him a cookie to get past";
-        start = "you are in the start. There are no items here";
-        
-        System.out.println(currentRoom.getItem());
-        
-        /* if(currentRoom == treasure){            
-            System.out.println(treasure);
-        }else if(secretRoom == secretRoom){
-            System.out.println(currentItem.getLongItemDescription());
-        }else if(bathroom == bathroom){
-            System.out.println(currentItem.getLongItemDescription());
-        }else if(wineCellar == wineCellar){
-            System.out.println(currentItem.getLongItemDescription());
-        }else if(lounge == lounge){
-            System.out.println(currentItem.getLongItemDescription());
-        }else if(guardRoom == guardRoom){
-            System.out.println(currentItem.getLongItemDescription());
-        }else if(start == start){
-            System.out.println(currentItem.getLongItemDescription());
+        System.out.println(currentRoom.getItemLong());
+        if(currentRoom.getItemShort() == ""){
+            return;
+        }else if(inInventory.contains(currentRoom.getItemShort())){
+            return;
         }else{
-            System.out.println("IDK");
+            inInventory.add(currentRoom.getItemShort());
         }
-        */
-        
+
+
+    }
+    
+    private void printInventory(){
+        System.out.println("These are the items you have: ");
+        for (String s : inInventory){
+            System.out.println(s);
+        }
+        if(inInventory.contains("cookie")){
+            createRooms();
+            System.out.println("\nYou found the correct item. Teleproting to start. Find your way to the finish room");
+            System.out.println(currentRoom.getLongDescription());
+        }
     }
 }

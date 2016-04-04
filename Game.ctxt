@@ -25,4 +25,6 @@ comment7.target=boolean\ quit(Command)
 comment7.text=\ \n\ "Quit"\ was\ entered.\ Check\ the\ rest\ of\ the\ command\ to\ see\n\ whether\ we\ really\ quit\ the\ game.\n\ @return\ true,\ if\ this\ command\ quits\ the\ game,\ false\ otherwise.\n
 comment8.params=command
 comment8.target=void\ lookCommand(Command)
-numComments=9
+comment9.params=
+comment9.target=void\ printInventory()
+numComments=10
