@@ -62,7 +62,7 @@ public class Room {
      * @return A long description of this room
      */
     public String getLongDescription() {
-        return "You are " + description + ".\n" + getExitString();
+        return "You are " + description + "\n" + getExitString();
     }
 
     /**
@@ -76,7 +76,11 @@ public class Room {
         Set<String> keys = exits.keySet();
         
         for(String exit : keys) {
-            returnString += " " + exit;
+            if(exit == "secret"){
+                returnString += "";
+            }else{
+                returnString += " " + exit;
+            }
         }
         return returnString;
     }

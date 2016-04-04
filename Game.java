@@ -26,26 +26,26 @@ public class Game {
         Room livingRoom, loft, wineCellar, foyer, lounge, gym, masterBedroom, guardRoom, finish, teleport;
         
         // create the rooms
-        secretRoom = new Room("in the Secret Room. shhhhh dont tell anyone");
-        kitchen = new Room("in the Kitchen");
-        diningRoom = new Room("in the Dining Room");
-        deck = new Room("on the Deck");
-        library = new Room("in the Library");
-        start = new Room("in the Starting Room");
-        homeTheather = new Room("in the Home Theather");
-        bathroom = new Room("in the Bathroom");
-        bedroom = new Room("in the Bedroom");
-        treasure = new Room("in the Treasure Room");
-        livingRoom = new Room("in the Living Room");
-        loft = new Room("in the Loft");
-        wineCellar = new Room("in the Wine Cellar");
-        foyer = new Room("in the Foyer");
-        lounge = new Room("in the Lounge");
-        gym = new Room("in the Gym");
-        masterBedroom = new Room("in the Master Bedroom");
-        guardRoom = new Room("in the Guarded Room");
+        secretRoom = new Room("in the Secret Room. shhhhh dont tell anyone.");
+        kitchen = new Room("in the Kitchen.");
+        diningRoom = new Room("in the Dining Room.");
+        deck = new Room("on the Deck.");
+        library = new Room("in the Library.");
+        start = new Room("in the Starting Room.");
+        homeTheather = new Room("in the Home Theather.");
+        bathroom = new Room("in the Bathroom.");
+        bedroom = new Room("in the Bedroom.");
+        treasure = new Room("in the Treasure Room.");
+        livingRoom = new Room("in the Living Room.");
+        loft = new Room("in the Loft.");
+        wineCellar = new Room("in the Wine Cellar.");
+        foyer = new Room("in the Foyer.");
+        lounge = new Room("in the Lounge.");
+        gym = new Room("in the Gym.");
+        masterBedroom = new Room("in the Master Bedroom.");
+        guardRoom = new Room("in the Guarded Room.");
         finish = new Room("in the final room! CONGRATS YOU FINISHED THE GAME!");
-        teleport = new Room("in the Teleporter Room. Teleported Back to Start Room");
+        teleport = new Room("in the Teleporter Room. You only exit now is the start.");
         
         // initialise room exits
         secretRoom.setExit("north", kitchen);
@@ -53,7 +53,7 @@ public class Game {
 
         kitchen.setExit("northwest", start);
         kitchen.setExit("west", diningRoom);
-        kitchen.setExit("south", secretRoom);
+        kitchen.setExit("secret", secretRoom);
         kitchen.setItem("There is a moldy peice of toast. Better leave that alone", "");
         
         diningRoom.setExit("north", start);
@@ -85,7 +85,7 @@ public class Game {
         bedroom.setItem("You find a comfy looking bed", "");
         
         treasure.setExit("south", wineCellar);
-        treasure.setItem("You find a cookie and pick it up!", "cookie");
+        treasure.setItem("You find a cookie!", "cookie");
         
         livingRoom.setExit("southwest", start);
         livingRoom.setExit("north", gym);
@@ -129,7 +129,7 @@ public class Game {
         library.setExit("south", deck);
         library.setItem("You see shelves to the ceiling filled with books.", "");
         
-        finish.setExit("none", null);
+        finish.setExit("", null);
         
         start.setExit("treasure", treasure);
         treasure.setExit("guard", guardRoom);
@@ -285,9 +285,11 @@ public class Game {
     
     private void lookCommand(Command command) {
         System.out.println(currentRoom.getItemLong());
-        if(currentRoom.getItemShort() == ""){
-            return;
-        }else if(inInventory.contains(currentRoom.getItemShort())){
+        //if(currentRoom.getItemShort() == ""){
+            //return;
+        if(inInventory.contains(currentRoom.getItemShort())){
+            System.out.println("You already have this in your inventory");
+        }else if(currentRoom.getItemShort() == ""){
             return;
         }else{
             inInventory.add(currentRoom.getItemShort());
