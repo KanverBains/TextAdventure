@@ -17,6 +17,7 @@ public class Game {
     public Game() {
         createRooms();
         parser = new Parser();
+        play();
     }
     /**
      * Create all the rooms and link their exits together.
