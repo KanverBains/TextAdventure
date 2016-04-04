@@ -10,6 +10,7 @@ public class Game {
     private Item currentItem;
     List<String> inInventory = new ArrayList<String>();
     private Room startRoom;
+    private int numberOfMoves = 0;
     /**
      * Create the game and initialise its internal map.
      */
@@ -117,9 +118,7 @@ public class Game {
         masterBedroom.setItem("Nothing out of the ordinary here", "");
         
         guardRoom.setExit("north", teleport);
-        if(inInventory.contains("cookie")){
-            guardRoom.setExit("east", finish);
-        }
+        guardRoom.setExit("east", finish);
         guardRoom.setExit("south", lounge);
         guardRoom.setExit("west", masterBedroom);
         guardRoom.setItem("The guard demands you give him a cookie or he will not move", "");
@@ -129,6 +128,8 @@ public class Game {
         library.setExit("east", start);
         library.setExit("south", deck);
         library.setItem("You see shelves to the ceiling filled with books.", "");
+        
+        finish.setExit("none", null);
         
         start.setExit("treasure", treasure);
         treasure.setExit("guard", guardRoom);
@@ -201,6 +202,8 @@ public class Game {
             case INVENTORY:
                 printInventory();
                 break;
+            case RESTART:
+                restart();
         }
         return wantToQuit;
     }
@@ -219,6 +222,12 @@ public class Game {
         System.out.println("Your command words are:");
         parser.showCommands();
     }
+    
+    private void restart(){
+        createRooms();
+        inInventory.clear();
+        System.out.println(currentRoom.getLongDescription());
+    }
 
     /** 
      * Try to go in one direction. If there is an exit, enter the new
@@ -234,15 +243,30 @@ public class Game {
         String direction = command.getSecondWord();
 
         // Try to leave current room.
+        Room tempRoom = currentRoom;
         Room nextRoom = currentRoom.getExit(direction);
 
         if (nextRoom == null) {
             System.out.println("There is no door!");
-        } else {
+        }else{
             currentRoom = nextRoom;
-            System.out.println(currentRoom.getLongDescription());
+            if(currentRoom.getShortDescription().equals("in the final room! CONGRATS YOU FINISHED THE GAME!") && inInventory.contains("cookie") == false){
+                currentRoom = tempRoom;
+                System.out.println("HEY!!!! Where's my cookie!!");
+                System.out.println(currentRoom.getLongDescription());
+            }else{
+                System.out.println(currentRoom.getLongDescription());
+                numberOfMoves++;
+                if(numberOfMoves == 1){
+                    System.out.println("You have done " + numberOfMoves + " Move.");
+                }else{
+                    System.out.println("You have done " + numberOfMoves + " Moves.");
+                }
+            }
+            if(currentRoom.getShortDescription().equals("in the final room! CONGRATS YOU FINISHED THE GAME!") && inInventory.contains("cookie") == true){
+                System.out.println("Type quit to quit or restart to restart");
+            }
         }
-        
     }
 
     /** 
@@ -268,19 +292,16 @@ public class Game {
         }else{
             inInventory.add(currentRoom.getItemShort());
         }
-
-
     }
     
     private void printInventory(){
-        System.out.println("These are the items you have: ");
-        for (String s : inInventory){
-            System.out.println(s);
-        }
-        if(inInventory.contains("cookie")){
-            createRooms();
-            System.out.println("\nYou found the correct item. Teleproting to start. Find your way to the finish room");
-            System.out.println(currentRoom.getLongDescription());
+        if(inInventory.size() == 0){
+            System.out.println("You have no items in your inventory");
+        }else{
+            System.out.println("These are the items you have: ");
+            for (String s : inInventory){
+                System.out.println(s);
+            }
         }
     }
 }
