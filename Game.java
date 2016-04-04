@@ -14,10 +14,10 @@ public class Game {
     /**
      * Create the game and initialise its internal map.
      */
+   
     public Game() {
         createRooms();
         parser = new Parser();
-        play();
     }
     /**
      * Create all the rooms and link their exits together.
@@ -306,5 +306,9 @@ public class Game {
                 System.out.println(s);
             }
         }
+    }
+    public static void main(String [] args){
+        Game startGame = new Game();
+        startGame.play();
     }
 }
