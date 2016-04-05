@@ -134,10 +134,10 @@ public class Game {
         
         finish.setExit("", null);
         
-        /*start.setExit("treasure", treasure);
+        start.setExit("treasure", treasure);
         treasure.setExit("guard", guardRoom);
         start.setExit("guard", guardRoom);
-        guardRoom.setExit("start", start);*/
+        guardRoom.setExit("start", start);
        
         currentRoom = start;  // start game outside
     }
@@ -186,7 +186,7 @@ public class Game {
 
         CommandWord commandWord = command.getCommandWord();
 
-        switch (commandWord) {
+        switch (commandWord){
             case UNKNOWN:
                 System.out.println("I don't know what you mean...");
                 break;
@@ -212,8 +212,25 @@ public class Game {
                 break;
             case RESTART:
                 restart();
+                
+            case EAT:
+                eat();
+            
         }
         return wantToQuit;
+    }
+    /**
+     * once typed eat it checks to see if you have the 
+     * cookie in your inventory. if you do you will eat it
+     * it you dont it will tell you that you have nothing to eat.
+     */
+    private void eat(){
+        if(inInventory.contains("cookie")){
+            System.out.println("You ate the cookie");
+            inInventory.remove("cookie");
+        }else{
+            System.out.println("You have nothing that you can eat");
+        }
     }
 
     // implementations of user commands:
