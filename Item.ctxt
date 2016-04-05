@@ -1,9 +1,11 @@
 #BlueJ class context
 comment0.params=itemDescription
 comment0.target=Item(java.lang.String)
-comment0.text=\n\ Constructor\ for\ objects\ of\ class\ Item\n
+comment0.text=\n\ Create\ a\ Item\ described\ "itemDescription".\ Initially,\ it\ has\n\ no\ itemDescription.\ "itemDescription"\ is\ something\ like\ \n\ "you\ found\ a\ cookie\ in\ the\ room"\n\ @param\ itemDescription\ The\ items's\ description.\n
 comment1.params=
 comment1.target=java.lang.String\ getLongItemDescription()
+comment1.text=\n\ @return\ the\ itemDescription\ of\ the\ item\n
 comment2.params=
 comment2.target=java.lang.String\ getShortItemDescription()
+comment2.text=\n\ @return\ the\ itemName\ of\ the\ item\n
 numComments=3

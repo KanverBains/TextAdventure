@@ -230,6 +230,10 @@ public class Game {
         System.out.println("Your command words are:");
         parser.showCommands();
     }
+    /**
+     * Resets the game from wherever you are
+     * resets it when you type the command word
+     */
     
     private void restart(){
         createRooms();
@@ -242,6 +246,10 @@ public class Game {
     /** 
      * Try to go in one direction. If there is an exit, enter the new
      * room, otherwise print an error message.
+     * also tracks the number of moves you took 
+     * also terminating the game when you enter 
+     * the final room only when above a certain 
+     * number of moves
      */
     private void goRoom(Command command) {
         if(!command.hasSecondWord()) {
@@ -303,6 +311,12 @@ public class Game {
             return true;  // signal that we want to quit
         }
     }
+    /**
+     * "look" was entered. checks the current room you are in and if 
+     * it has a description it will dispaly that. if the description
+     * has an item attached to it, it will be added to your inventory
+     * if you dont already have it in your inventory.
+     */
     
     private void lookCommand(Command command) {
         System.out.println(currentRoom.getItemLong());
@@ -314,6 +328,12 @@ public class Game {
             inInventory.add(currentRoom.getItemShort());
         }
     }
+    /**
+     * "inventory" was entered. will print out what 
+     * you currently have in your inventory
+     * it will also check if you have anyting in your
+     * inventory and if not it will print a different statemnt
+     */
     
     private void printInventory(){
         if(inInventory.size() == 0){

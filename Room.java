@@ -33,15 +33,26 @@ public class Room {
     public void setExit(String direction, Room neighbor) {
         exits.put(direction, neighbor);
     }
+    /**
+     * Define an name from this itemDescripton.
+     * @param iName The itemName.
+     * @param iDescription the itemDescription.
+     */
     public void setItem(String itemDescription, String itemName) {
         iName = itemName;
         iDescription = itemDescription;
     }
-    
+    /**
+     * @return The long description of the item
+     * (the one that was defined in the setItem).
+     */    
     public String getItemLong()
     {
         return iDescription;
     }
+    /**
+     * @return the short description/name of the item
+     */
     
     public String getItemShort(){
         return iName;
@@ -68,6 +79,7 @@ public class Room {
     /**
      * Return a string describing the room's exits, for example
      * "Exits: north west".
+     * Also hides the hidden room so it wont print out the direction.
      * @return Details of the room's exits.
      */
 
