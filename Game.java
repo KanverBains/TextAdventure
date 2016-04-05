@@ -11,6 +11,8 @@ public class Game {
     List<String> inInventory = new ArrayList<String>();
     private Room startRoom;
     private int numberOfMoves = 0;
+    private boolean win = false;
+    private boolean cheat = false;
     /**
      * Create the game and initialise its internal map.
      */
@@ -132,10 +134,10 @@ public class Game {
         
         finish.setExit("", null);
         
-        start.setExit("treasure", treasure);
+        /*start.setExit("treasure", treasure);
         treasure.setExit("guard", guardRoom);
         start.setExit("guard", guardRoom);
-        guardRoom.setExit("start", start);
+        guardRoom.setExit("start", start);*/
        
         currentRoom = start;  // start game outside
     }
@@ -153,6 +155,11 @@ public class Game {
         while (! finished) {
             Command command = parser.getCommand();
             finished = processCommand(command);
+            if (win == true){
+                finished = true;
+            }else if (cheat == true){
+                finished = true;
+            }
         }
         System.out.println("Thank you for playing. Good bye.");
     }
@@ -227,7 +234,9 @@ public class Game {
     private void restart(){
         createRooms();
         inInventory.clear();
+        numberOfMoves = 0;
         System.out.println(currentRoom.getLongDescription());
+        
     }
 
     /** 
@@ -264,11 +273,22 @@ public class Game {
                     System.out.println("You have done " + numberOfMoves + " Moves.");
                 }
             }
-            if(currentRoom.getShortDescription().equals("in the final room! CONGRATS YOU FINISHED THE GAME!") && inInventory.contains("cookie") == true){
-                System.out.println("Type quit to quit or restart to restart");
-            }
         }
-    }
+           if(currentRoom.getShortDescription().equals("in the final room! CONGRATS YOU FINISHED THE GAME!") && inInventory.contains("cookie") == true){
+                if(numberOfMoves < 9){
+                    System.out.println("You finished with less than 9 moves!!!!!");
+                    System.out.println("IMPOSSIBRUUUUUU you cheated!!!");
+                    cheat = true;
+                }else if(numberOfMoves >= 9){
+                    System.out.println("You finished with " + numberOfMoves + " moves");
+                    win = true;
+                }else{
+                    System.out.println("");
+                }
+           }
+        }
+        
+    
 
     /** 
      * "Quit" was entered. Check the rest of the command to see
@@ -286,8 +306,6 @@ public class Game {
     
     private void lookCommand(Command command) {
         System.out.println(currentRoom.getItemLong());
-        //if(currentRoom.getItemShort() == ""){
-            //return;
         if(inInventory.contains(currentRoom.getItemShort())){
             System.out.println("You already have this in your inventory");
         }else if(currentRoom.getItemShort() == ""){
